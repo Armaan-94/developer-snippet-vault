@@ -15,28 +15,27 @@ connectDB();
 
 app.use(helmet());
 
-const cors = require("cors");
-
-const cors = require("cors");
-
 const allowedOrigins = [
   "http://localhost:5173",
   "https://developer-snippet-vault.vercel.app"
 ];
 
-const cors = require("cors");
-
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://developer-snippet-vault.vercel.app",
-    "https://developer-snippet-vault-git-main-armaan-94s-projects.vercel.app"
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+
+    if (
+      allowedOrigins.includes(origin) ||
+      origin.endsWith(".vercel.app")
+    ) {
+      return callback(null, true);
+    }
+
+    return callback(null, true);
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true
 }));
-
-app.options("*", cors());
 
 app.options("*", cors());
 
