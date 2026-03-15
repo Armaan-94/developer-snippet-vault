@@ -13,31 +13,10 @@ const app = express();
 
 connectDB();
 
-app.use(helmet());
-
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://developer-snippet-vault.vercel.app"
-];
-
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-
-    if (
-      allowedOrigins.includes(origin) ||
-      origin.endsWith(".vercel.app")
-    ) {
-      return callback(null, true);
-    }
-
-    return callback(null, true);
-  },
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true
-}));
-
+app.use(cors());
 app.options("*", cors());
+
+app.use(helmet());
 
 app.use(express.json({ limit: "10kb" }));
 
