@@ -24,18 +24,19 @@ const allowedOrigins = [
   "https://developer-snippet-vault.vercel.app"
 ];
 
-app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin) return callback(null, true);
+const cors = require("cors");
 
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(null, true);
-    }
-  },
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://developer-snippet-vault.vercel.app",
+    "https://developer-snippet-vault-git-main-armaan-94s-projects.vercel.app"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
+
+app.options("*", cors());
 
 app.options("*", cors());
 
