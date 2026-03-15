@@ -17,14 +17,27 @@ app.use(helmet());
 
 const cors = require("cors");
 
+const cors = require("cors");
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://developer-snippet-vault.vercel.app"
+];
+
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://developer-snippet-vault.vercel.app"
-  ],
-  methods: ["GET","POST","PUT","DELETE"],
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(null, true);
+    }
+  },
   credentials: true
 }));
+
+app.options("*", cors());
 
 app.use(express.json({ limit: "10kb" }));
 
