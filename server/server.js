@@ -15,11 +15,15 @@ connectDB();
 
 app.use(helmet());
 
+const cors = require("cors");
+
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    process.env.CLIENT_URL
-  ]
+    "https://developer-snippet-vault.vercel.app"
+  ],
+  methods: ["GET","POST","PUT","DELETE"],
+  credentials: true
 }));
 
 app.use(express.json({ limit: "10kb" }));
