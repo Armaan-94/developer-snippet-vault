@@ -13,7 +13,25 @@ const app = express();
 
 connectDB();
 
-app.use(cors());
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://developer-snippet-vault.vercel.app",
+  "https://developer-snippet-vault-git-main-armaan-94s-projects.vercel.app"
+];
+
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(null, true);
+  },
+  methods: ["GET","POST","PUT","DELETE","OPTIONS"],
+  allowedHeaders: ["Content-Type","Authorization"],
+  credentials: true
+}));
+
 app.options("*", cors());
 
 app.use(helmet());
