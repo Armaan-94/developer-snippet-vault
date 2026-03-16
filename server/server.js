@@ -1,4 +1,8 @@
 const express = require("express");
+const connectDB = require("./config/db");
+const snippetRoutes = require("./routes/snippetRoutes");
+
+const app = express();
 
 const cors = require("cors");
 
@@ -19,11 +23,6 @@ const rateLimit = require("express-rate-limit");
 const morgan = require("morgan");
 
 require("dotenv").config();
-
-const connectDB = require("./config/db");
-const snippetRoutes = require("./routes/snippetRoutes");
-
-const app = express();
 
 connectDB();
 
