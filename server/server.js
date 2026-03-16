@@ -35,8 +35,6 @@ app.use(cors({
   credentials: true
 }));
 
-app.options("/*", cors());
-
 app.use(helmet());
 
 app.use(express.json({ limit: "10kb" }));
