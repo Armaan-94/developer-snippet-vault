@@ -1,106 +1,52 @@
 import { useState } from "react";
 import { updateSnippet } from "../api/snippetApi";
 import toast from "react-hot-toast";
+import Modal from "./ui/Modal";
+import SnippetForm from "./SnippetForm";
+import { toTagsArray, fromTagsArray } from "../lib/snippet";
 
-function EditSnippetModal({ snippet, closeModal, refresh }) {
+function EditSnippetModal({ open, snippet, closeModal, refresh }) {
+  const [submitting, setSubmitting] = useState(false);
 
-  const [form, setForm] = useState({
-    title: snippet.title,
-    language: snippet.language,
-    code: snippet.code,
-    tags: snippet.tags.join(",")
-  });
-
-  const handleChange = (e) => {
-
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value
-    });
-
-  };
-
-  const submit = async () => {
-
+  const submit = async (form) => {
+    setSubmitting(true);
     try {
-
       await updateSnippet(snippet._id, {
         ...form,
-        tags: form.tags.split(",")
+        tags: toTagsArray(form.tags),
       });
 
       toast.success("Snippet updated");
-
       refresh();
-
       closeModal();
-
     } catch {
-
       toast.error("Update failed");
-
+    } finally {
+      setSubmitting(false);
     }
-
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center">
-
-      <div className="bg-gray-900 p-8 rounded-xl w-[500px] space-y-4">
-
-        <h2 className="text-xl font-bold">
-          Edit Snippet
-        </h2>
-
-        <input
-          name="title"
-          value={form.title}
-          onChange={handleChange}
-          className="w-full p-2 bg-gray-800 rounded"
-        />
-
-        <input
-          name="language"
-          value={form.language}
-          onChange={handleChange}
-          className="w-full p-2 bg-gray-800 rounded"
-        />
-
-        <textarea
-          name="code"
-          value={form.code}
-          onChange={handleChange}
-          className="w-full p-2 bg-gray-800 rounded h-32"
-        />
-
-        <input
-          name="tags"
-          value={form.tags}
-          onChange={handleChange}
-          className="w-full p-2 bg-gray-800 rounded"
-        />
-
-        <div className="flex gap-3">
-
-          <button
-            onClick={submit}
-            className="bg-emerald-600 px-4 py-2 rounded"
-          >
-            Save
-          </button>
-
-          <button
-            onClick={closeModal}
-            className="bg-gray-700 px-4 py-2 rounded"
-          >
-            Cancel
-          </button>
-
-        </div>
-
-      </div>
-
-    </div>
+    <Modal
+      open={open}
+      onClose={submitting ? undefined : closeModal}
+      title="Edit snippet"
+      description="Update the details of your saved snippet."
+    >
+      <SnippetForm
+        initial={{
+          title: snippet.title,
+          language: snippet.language,
+          description: snippet.description || "",
+          code: snippet.code,
+          tags: fromTagsArray(snippet.tags),
+        }}
+        onSubmit={submit}
+        onCancel={closeModal}
+        submitLabel="Save changes"
+        submitting={submitting}
+      />
+    </Modal>
   );
 }
 
